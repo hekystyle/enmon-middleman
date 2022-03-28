@@ -6,6 +6,15 @@ import { CronJob } from 'cron';
 
 const log = debug('app');
 
+process.on('unhandledRejection', reason => {
+  log({ msg: 'unhandled rejection', reason });
+});
+
+process.on('uncaughtException', error => {
+  log({ msg: 'uncaught exception', error });
+  process.exit(1);
+});
+
 async function fetchTemperature(): Promise<undefined | number> {
   const {
     status,
