@@ -81,8 +81,10 @@ job.start();
 log({ msg: 'job started', nextRun: job.nextDate() });
 
 const handleAppShutdown = () => {
-  log({ msg: 'shutting down app ...' });
+  log({ msg: 'received shutdown signal, shutting down job ...' });
   job.stop();
+  log({ msg: 'job shuted down, exiting process ...' });
+  process.exit(0);
 };
 
 process.once('SIGINT', handleAppShutdown);
