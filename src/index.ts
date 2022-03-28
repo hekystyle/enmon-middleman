@@ -83,12 +83,6 @@ const job = new CronJob({
   runOnInit: true,
 });
 
-log('starting job ...');
-
-job.start();
-
-log({ msg: 'job started', nextRun: job.nextDate() });
-
 const handleAppShutdown = () => {
   log({ msg: 'received shutdown signal, shutting down job ...' });
   job.stop();
@@ -98,3 +92,9 @@ const handleAppShutdown = () => {
 
 process.once('SIGINT', handleAppShutdown);
 process.once('SIGTERM', handleAppShutdown);
+
+log('starting job ...');
+
+job.start();
+
+log({ msg: 'job started', nextRun: job.nextDate() });
