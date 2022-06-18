@@ -3,6 +3,7 @@ import axios from 'axios';
 import { load } from 'cheerio';
 import debug from 'debug';
 import { CronJob } from 'cron';
+import config from 'config';
 
 const log = debug('app');
 
@@ -20,7 +21,7 @@ async function fetchTemperature(): Promise<undefined | number> {
     status,
     statusText,
     data: html,
-  } = await axios.get<string>(process.env.SOURCE_URL ?? 'http://192.168.3.6', {
+  } = await axios.get<string>(config.get('thermometer.dataSourceUrl'), {
     validateStatus: () => true,
   });
 
@@ -49,16 +50,19 @@ async function fetchTemperature(): Promise<undefined | number> {
 }
 
 async function uploadTemperature(temperature: number): Promise<void> {
+  const env = config.get<string>('thermometer.enmon.env');
+  const customerId = config.get<string>('thermometer.enmon.customerId');
+
   const { status, statusText, data } = await axios.post<unknown>(
-    `https://${process.env.ENMON_APP_ENV ?? 'dev'}.enmon.tech/meter/plain/${process.env.ENMON_CUSTOMER_ID ?? ''}/value`,
+    `https://${env}.enmon.tech/meter/plain/${customerId}/value`,
     {
-      devEUI: 'heky-koj9-temp-puda',
+      devEUI: config.get<string>('thermometer.enmon.devEUI'),
       date: new Date(),
       value: temperature,
     },
     {
       headers: {
-        Authorization: `Bearer ${process.env.ENMON_METER_AUTH_TOKEN ?? ''}`,
+        Authorization: `Bearer ${config.get<string>('thermometer.enmon.token')}`,
       },
       validateStatus: () => true,
     },
@@ -97,4 +101,4 @@ log('starting job ...');
 
 job.start();
 
-log({ msg: 'job started', nextRun: job.nextDate() });
+log({ msg: 'job started', nextRun: job.nextDate().toDate() });
