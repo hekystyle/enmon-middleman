@@ -520,7 +520,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/config@npm:^0.0.41":
+"@types/config@npm:0.0.41":
   version: 0.0.41
   resolution: "@types/config@npm:0.0.41"
   checksum: 528eb5e5d60c48cf82a2b0988ee1e5e088472698ad25944131b0ba87b2e3bb0989f3b4d45edb9d49eefcc8bf158c267905c386aaec15857b9fb24be449c3f27c
@@ -1336,7 +1336,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "enmon-middleman@workspace:."
   dependencies:
-    "@types/config": ^0.0.41
+    "@types/config": 0.0.41
     "@types/cron": 1.7.3
     "@types/debug": 4.1.7
     "@types/node": 17.0.23
