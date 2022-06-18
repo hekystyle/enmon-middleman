@@ -6,7 +6,7 @@ COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile
 
 COPY src src
-COPY tsconfig.json .
+COPY tsconfig.json tsconfig.build.json ./
 RUN yarn build
 
 FROM node:lts-alpine as runtime
