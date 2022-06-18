@@ -1,8 +1,8 @@
 FROM node:lts-alpine as build
 WORKDIR /workspace
 
-COPY node_modules node_modules
-COPY package.json yarn.lock ./
+COPY .yarn .yarn
+COPY package.json yarn.lock .yarnrc.yml ./
 RUN yarn install --frozen-lockfile
 
 COPY src src
