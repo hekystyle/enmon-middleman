@@ -7,6 +7,7 @@
   "author": "Tomáš Hekrla (Heky) <tomas@heky.eu>",
   "license": "MIT",
   "private": true,
+  "packageManager": "yarn@3.2.1",
   "scripts": {
     "build": "tsc -p ./tsconfig.build.json",
     "dev": "ts-node --esm src/index.ts",
