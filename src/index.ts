@@ -4,6 +4,8 @@ import { load } from 'cheerio';
 import debug from 'debug';
 import { CronJob } from 'cron';
 import config from 'config';
+import { PlainMeterApiClient } from './services/enmon/meter/plain';
+import { isEnmonEnv } from './services/enmon/baseApiClient';
 
 const log = debug('app');
 
@@ -53,20 +55,15 @@ async function uploadTemperature(temperature: number): Promise<void> {
   const env = config.get<string>('thermometer.enmon.env');
   const customerId = config.get<string>('thermometer.enmon.customerId');
 
-  const { status, statusText, data } = await axios.post<unknown>(
-    `https://${env}.enmon.tech/meter/plain/${customerId}/value`,
-    {
-      devEUI: config.get<string>('thermometer.enmon.devEUI'),
-      date: new Date(),
-      value: temperature,
-    },
-    {
-      headers: {
-        Authorization: `Bearer ${config.get<string>('thermometer.enmon.token')}`,
-      },
-      validateStatus: () => true,
-    },
-  );
+  if (!isEnmonEnv(env)) throw new Error(`Following value is not valid Enmon env: ${env}`);
+
+  const { status, statusText, data } = await new PlainMeterApiClient(env).sendValue({
+    customerId,
+    token: config.get<string>('thermometer.enmon.token'),
+    devEUI: config.get<string>('thermometer.enmon.devEUI'),
+    date: new Date(),
+    value: temperature,
+  });
 
   log({ msg: 'upload temperature result', status, statusText, data });
 }
